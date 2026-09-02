@@ -9,6 +9,7 @@ import {
   calcularStatusMensagem,
   verificarEvolucao,
 } from '../utils/pokemon';
+import { getCorTipo } from '../utils/typeColors';
 import StatBar from '../components/StatBar';
 import ActionButton from '../components/ActionButton';
 import { cores } from '../theme';
@@ -30,9 +31,11 @@ export default function GamePage({ starter, pokemonInicial }: GamePageProps) {
   const [nivel, setNivel] = useState(1);
   const [exp, setExp] = useState(0);
 
-  // Atributos principais do Pokémon, todos de 0 a 100
+  // Atributos principais do Pokémon, todos de 0 a 100.
+  // Os 4 seguem a mesma regra agora: quanto MAIOR, melhor, e todos caem
+  // sozinhos com o tempo. Alimentar recupera a saciedade.
   const [stats, setStats] = useState<Stats>({
-    fome: 20,
+    saciedade: 80,
     felicidade: 80,
     energia: 80,
     higiene: 80,
@@ -44,13 +47,13 @@ export default function GamePage({ starter, pokemonInicial }: GamePageProps) {
 
   // ------------------------------------------------------------------
   // PASSAGEM DO TEMPO
-  // A cada INTERVALO_TEMPO ms os atributos pioram sozinhos, simulando
+  // A cada INTERVALO_TEMPO ms os 4 atributos diminuem sozinhos, simulando
   // o Pokémon "vivendo" mesmo sem interação do jogador.
   // ------------------------------------------------------------------
   useEffect(() => {
     const intervalo = setInterval(() => {
       setStats((atual) => ({
-        fome: clamp(atual.fome + 3),
+        saciedade: clamp(atual.saciedade - 3),
         felicidade: clamp(atual.felicidade - 2),
         energia: clamp(atual.energia - 2),
         higiene: clamp(atual.higiene - 1),
@@ -113,7 +116,7 @@ export default function GamePage({ starter, pokemonInicial }: GamePageProps) {
   // Cada ação altera os atributos de forma coerente com o que representa.
   // ------------------------------------------------------------------
   function alimentar() {
-    setStats((s) => ({ ...s, fome: clamp(s.fome - 25) }));
+    setStats((s) => ({ ...s, saciedade: clamp(s.saciedade + 25) }));
   }
 
   function brincar() {
@@ -121,7 +124,7 @@ export default function GamePage({ starter, pokemonInicial }: GamePageProps) {
       ...s,
       felicidade: clamp(s.felicidade + 15),
       energia: clamp(s.energia - 10),
-      fome: clamp(s.fome + 5),
+      saciedade: clamp(s.saciedade - 5),
     }));
   }
 
@@ -137,7 +140,7 @@ export default function GamePage({ starter, pokemonInicial }: GamePageProps) {
     setStats((s) => ({
       ...s,
       energia: clamp(s.energia - 15),
-      fome: clamp(s.fome + 10),
+      saciedade: clamp(s.saciedade - 10),
     }));
     ganharExperiencia(20);
   }
@@ -151,7 +154,11 @@ export default function GamePage({ starter, pokemonInicial }: GamePageProps) {
         <Text style={styles.dexNumero}>Nº {String(pokemon.dexNumber).padStart(3, '0')}</Text>
         <View style={styles.chips}>
           {pokemon.types.map((tipo) => (
-            <Chip key={tipo} style={styles.chip} textStyle={styles.chipTexto}>
+            <Chip
+              key={tipo}
+              style={[styles.chip, { backgroundColor: getCorTipo(tipo) }]}
+              textStyle={styles.chipTexto}
+            >
               {tipo}
             </Chip>
           ))}
@@ -184,7 +191,7 @@ export default function GamePage({ starter, pokemonInicial }: GamePageProps) {
 
       <Card style={styles.cardAtributos}>
         <Card.Content>
-          <StatBar label="Fome" icon="🍗" value={stats.fome} color={cores.fome} />
+          <StatBar label="Saciedade" icon="🍖" value={stats.saciedade} color={cores.saciedade} />
           <StatBar label="Felicidade" icon="😊" value={stats.felicidade} color={cores.felicidade} />
           <StatBar label="Energia" icon="⚡" value={stats.energia} color={cores.energia} />
           <StatBar label="Higiene" icon="🛁" value={stats.higiene} color={cores.higiene} />
@@ -192,7 +199,7 @@ export default function GamePage({ starter, pokemonInicial }: GamePageProps) {
       </Card>
 
       <View style={styles.acoes}>
-        <ActionButton label="Alimentar" icon="🍗" color={cores.fome} onPress={alimentar} />
+        <ActionButton label="Alimentar" icon="🍖" color={cores.saciedade} onPress={alimentar} />
         <ActionButton label="Brincar" icon="🎾" color={cores.felicidade} onPress={brincar} />
         <ActionButton label="Dormir" icon="💤" color={cores.energia} onPress={dormir} />
         <ActionButton label="Limpar" icon="🧼" color={cores.higiene} onPress={limpar} />
@@ -207,7 +214,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   dexNumero: { fontWeight: '700', color: cores.cinza },
   chips: { flexDirection: 'row' },
-  chip: { marginLeft: 4, backgroundColor: cores.azul },
+  chip: { marginLeft: 4 },
   chipTexto: { color: '#fff', textTransform: 'capitalize', fontSize: 11 },
   aviso: { backgroundColor: cores.amarelo, marginBottom: 10, borderRadius: 12 },
   avisoTexto: { textAlign: 'center', fontWeight: '700', color: '#5D4037' },

@@ -4,7 +4,7 @@ import { Text, ActivityIndicator, Button, IconButton } from 'react-native-paper'
 import { STARTERS } from '../data/starters';
 import { fetchPokemonData } from '../services/pokeApi';
 import { Starter, PokemonInfo } from '../types/game';
-import { getCorTipo } from '../utils/Typecolors';
+import { getCorTipo } from '../utils/typeColors';
 import Pokeball from '../components/Pokeball';
 import { cores } from '../theme';
 

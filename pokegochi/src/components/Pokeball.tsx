@@ -6,7 +6,7 @@ interface PokeballProps {
   style?: ViewStyle;
 }
 
-// Pokébola decorativa feita só com Views + StyleSheet (sem lib de SVG),
+// Pokébola decorativa feita só com Views + StyleSheet,
 // usada como indicador de carregamento e como toque visual criativo.
 export default function Pokeball({ size = 60, style }: PokeballProps) {
   const borda = Math.max(2, size * 0.05);
