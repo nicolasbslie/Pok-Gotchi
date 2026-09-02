@@ -22,8 +22,13 @@ export const cores = {
   verde: '#4CAF50',
   cinza: '#78909C',
   fundo: '#F4F6FF',
-  fome: '#FF7043',
+  saciedade: '#FF7043',
   felicidade: '#FFCA28',
   energia: '#42A5F5',
   higiene: '#66BB6A',
+  // cores do "console escuro" da tela de seleção de inicial
+  painelEscuro: '#2E2E33',
+  painelHeader: '#C97B3D',
+  painelSecundario: '#3F3F46',
+  painelTexto: '#ECECEC',
 };
