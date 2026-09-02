@@ -21,5 +21,8 @@ export async function fetchPokemonData(idOuNome: number | string): Promise<Pokem
       dados.sprites?.front_default,
     types: dados.types.map((t: any) => t.type.name),
     dexNumber: dados.id,
+    // a PokeAPI retorna altura em decímetros e peso em hectogramas
+    height: dados.height / 10,
+    weight: dados.weight / 10,
   };
 }

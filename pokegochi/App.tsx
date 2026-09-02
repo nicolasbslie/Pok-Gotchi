@@ -6,6 +6,7 @@ import GamePage from './src/pages/GamePage';
 import { Starter, PokemonInfo } from './src/types/game';
 import { pokeTheme } from './src/theme';
 
+// decide qual tela mostrar (seleção ou jogo)
 // e guarda qual foi o Pokémon escolhido pelo jogador.
 export default function App() {
   const [starterEscolhido, setStarterEscolhido] = useState<Starter | null>(null);

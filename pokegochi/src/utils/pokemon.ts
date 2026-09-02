@@ -12,10 +12,11 @@ export function expParaProximoNivel(nivelAtual: number): number {
 }
 
 // Decide qual mensagem exibir com base nos atributos atuais.
-// A ordem importa: se vários atributos estiverem ruins ao mesmo tempo,
-// mostramos o mais "urgente" primeiro.
+// Agora todos os atributos seguem a mesma regra: quanto MENOR o valor, pior.
+// A ordem importa: se vários estiverem ruins ao mesmo tempo, mostramos o
+// mais "urgente" primeiro.
 export function calcularStatusMensagem(stats: Stats): string {
-  if (stats.fome >= 75) return 'Estou com fome!';
+  if (stats.saciedade <= 25) return 'Estou com fome!';
   if (stats.energia <= 20) return 'Estou cansado...';
   if (stats.higiene <= 25) return 'Preciso de um banho!';
   if (stats.felicidade <= 25) return 'Estou triste.';

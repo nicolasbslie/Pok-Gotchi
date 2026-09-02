@@ -1,6 +1,7 @@
-// Representa os 4 atributos do Pokémon, cada um variando de 0 a 100
+// Representa os 4 atributos do Pokémon, cada um variando de 0 a 100.
+// Todos diminuem com o tempo; cada ação recupera um ou mais deles.
 export interface Stats {
-  fome: number;
+  saciedade: number;
   felicidade: number;
   energia: number;
   higiene: number;
@@ -28,4 +29,6 @@ export interface PokemonInfo {
   image: string;
   types: string[];
   dexNumber: number;
+  height: number; // em metros
+  weight: number; // em kg
 }
