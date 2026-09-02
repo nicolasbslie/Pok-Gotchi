@@ -1,14 +1,45 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { StyleSheet } from 'react-native'
+import { Button } from 'react-native-paper'
 
-const ActionButton = () => {
+interface ActionButtonProps {
+  titulo: string
+  icone: string
+  onPress: () => void
+}
+
+export default function ActionButton({
+  titulo,
+  icone,
+  onPress,
+}: ActionButtonProps) {
   return (
-    <View>
-      <Text>ActionButton</Text>
-    </View>
+    <Button
+      mode="contained"
+      icon={icone}
+      onPress={onPress}
+      style={styles.botao}
+      contentStyle={styles.conteudo}
+      labelStyle={styles.texto}
+    >
+      {titulo}
+    </Button>
   )
 }
 
-export default ActionButton
+const styles = StyleSheet.create({
+  botao: {
+    flex: 1,
+    margin: 5,
+    borderRadius: 12,
+  },
 
-const styles = StyleSheet.create({})
+  conteudo: {
+    height: 48,
+  },
+
+  texto: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+})
