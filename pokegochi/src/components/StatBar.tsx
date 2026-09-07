@@ -1,56 +1,32 @@
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { ProgressBar, Text } from 'react-native-paper'
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Text, ProgressBar } from 'react-native-paper';
 
 interface StatBarProps {
-  nome: string
-  valor: number
+  label: string;
+  icon: string; // emoji usado como ícone, sem depender de libs extras
+  value: number; // 0 a 100
+  color: string;
 }
 
-export default function StatBar({ nome, valor }: StatBarProps) {
-  const progresso = valor / 100
-
+// Barra de atributo reutilizável (fome, felicidade, energia, higiene).
+// Só exibe o valor recebido — não conhece a lógica do jogo.
+export default function StatBar({ label, icon, value, color }: StatBarProps) {
   return (
     <View style={styles.container}>
-      <View style={styles.topo}>
-        <Text style={styles.nome}>{nome}</Text>
-
-        <Text style={styles.valor}>
-          {Math.round(valor)}/100
-        </Text>
+      <View style={styles.header}>
+        <Text style={styles.label}>{icon} {label}</Text>
+        <Text style={styles.value}>{Math.round(value)}%</Text>
       </View>
-
-      <ProgressBar
-        progress={progresso}
-        style={styles.barra}
-      />
+      <ProgressBar progress={value / 100} color={color} style={styles.bar} />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 14,
-  },
-
-  topo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-
-  nome: {
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-
-  valor: {
-    fontSize: 13,
-    fontWeight: 'bold',
-  },
-
-  barra: {
-    height: 10,
-    borderRadius: 10,
-  },
-})
+  container: { marginVertical: 6 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 },
+  label: { fontSize: 13, fontWeight: '600', color: '#37474F' },
+  value: { fontSize: 12, color: '#78909C' },
+  bar: { height: 10, borderRadius: 6 },
+});

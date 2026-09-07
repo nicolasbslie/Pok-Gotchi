@@ -1,45 +1,30 @@
-import React from 'react'
-import { StyleSheet } from 'react-native'
-import { Button } from 'react-native-paper'
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
 
 interface ActionButtonProps {
-  titulo: string
-  icone: string
-  onPress: () => void
+  label: string;
+  icon: string; // emoji
+  color: string;
+  onPress: () => void;
 }
 
-export default function ActionButton({
-  titulo,
-  icone,
-  onPress,
-}: ActionButtonProps) {
+// Botão de ação reutilizável (Alimentar, Brincar, Dormir, Limpar, Treinar)
+export default function ActionButton({ label, icon, color, onPress }: ActionButtonProps) {
   return (
     <Button
       mode="contained"
-      icon={icone}
       onPress={onPress}
-      style={styles.botao}
-      contentStyle={styles.conteudo}
-      labelStyle={styles.texto}
+      style={[styles.button, { backgroundColor: color }]}
+      labelStyle={styles.label}
+      compact
     >
-      {titulo}
+      {icon} {label}
     </Button>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-  botao: {
-    flex: 1,
-    margin: 5,
-    borderRadius: 12,
-  },
-
-  conteudo: {
-    height: 48,
-  },
-
-  texto: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-})
+  button: { margin: 4, borderRadius: 14, minWidth: 100 },
+  label: { fontSize: 13, fontWeight: '700' },
+});
