@@ -32,3 +32,13 @@ export interface PokemonInfo {
   height: number; // em metros
   weight: number; // em kg
 }
+
+// Formato de tudo que precisa ser salvo/restaurado do jogo
+export interface SavedProgress {
+  starter: Starter;
+  pokemon: PokemonInfo;
+  estagio: number;
+  nivel: number;
+  exp: number;
+  stats: Stats;
+}

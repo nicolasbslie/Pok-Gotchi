@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, ScrollView } from 'react-native';
 import { Text, Card, Chip } from 'react-native-paper';
-import { Starter, PokemonInfo, Stats } from '../types/game';
+import { Starter, PokemonInfo, Stats, SavedProgress } from '../types/game';
 import { fetchPokemonData } from '../services/pokeApi';
+import { salvarProgresso } from '../services/storage';
 import {
   clamp,
   expParaProximoNivel,
   calcularStatusMensagem,
   verificarEvolucao,
 } from '../utils/pokemon';
-import { getCorTipo } from '../utils/typeColors';
+import { getCorTipo } from '../utils/TypeColors';
 import StatBar from '../components/StatBar';
 import ActionButton from '../components/ActionButton';
 import { cores } from '../theme';
@@ -17,29 +18,33 @@ import { cores } from '../theme';
 interface GamePageProps {
   starter: Starter;
   pokemonInicial: PokemonInfo;
+  progressoSalvo?: SavedProgress | null; // dados recuperados do AsyncStorage, se existirem
 }
 
 // Intervalo (em ms) em que os atributos mudam sozinhos com o passar do tempo
 const INTERVALO_TEMPO = 4000;
 
-export default function GamePage({ starter, pokemonInicial }: GamePageProps) {
+export default function GamePage({ starter, pokemonInicial, progressoSalvo }: GamePageProps) {
   // Dados atuais do Pokémon exibido (mudam quando ele evolui)
-  const [pokemon, setPokemon] = useState<PokemonInfo>(pokemonInicial);
+  // Se tiver progresso salvo, começa a partir dele; senão usa o inicial escolhido agora
+  const [pokemon, setPokemon] = useState<PokemonInfo>(progressoSalvo?.pokemon ?? pokemonInicial);
   // Quantas evoluções já aconteceram (0 = forma inicial escolhida)
-  const [estagio, setEstagio] = useState(0);
+  const [estagio, setEstagio] = useState(progressoSalvo?.estagio ?? 0);
 
-  const [nivel, setNivel] = useState(1);
-  const [exp, setExp] = useState(0);
+  const [nivel, setNivel] = useState(progressoSalvo?.nivel ?? 1);
+  const [exp, setExp] = useState(progressoSalvo?.exp ?? 0);
 
   // Atributos principais do Pokémon, todos de 0 a 100.
   // Os 4 seguem a mesma regra agora: quanto MAIOR, melhor, e todos caem
   // sozinhos com o tempo. Alimentar recupera a saciedade.
-  const [stats, setStats] = useState<Stats>({
-    saciedade: 80,
-    felicidade: 80,
-    energia: 80,
-    higiene: 80,
-  });
+  const [stats, setStats] = useState<Stats>(
+    progressoSalvo?.stats ?? {
+      saciedade: 80,
+      felicidade: 80,
+      energia: 80,
+      higiene: 80,
+    }
+  );
 
   // Mensagens temporárias exibidas em destaque no topo da tela
   const [avisoNivel, setAvisoNivel] = useState<string | null>(null);
@@ -95,6 +100,22 @@ export default function GamePage({ starter, pokemonInicial }: GamePageProps) {
     const t = setTimeout(() => setAvisoEvolucao(null), 3500);
     return () => clearTimeout(t);
   }, [avisoEvolucao]);
+
+  // ------------------------------------------------------------------
+  // PERSISTÊNCIA
+  // Salva o progresso automaticamente sempre que algo relevante do jogo muda
+  // (evolução, nível, exp ou os 4 atributos).
+  // ------------------------------------------------------------------
+  useEffect(() => {
+    salvarProgresso({
+      starter,
+      pokemon,
+      estagio,
+      nivel,
+      exp,
+      stats,
+    });
+  }, [pokemon, estagio, nivel, exp, stats]);
 
   // Adiciona experiência e, se for suficiente, sobe de nível.
   // O nível novo dispara o useEffect de evolução acima automaticamente.
