@@ -19,12 +19,13 @@ interface GamePageProps {
   starter: Starter;
   pokemonInicial: PokemonInfo;
   progressoSalvo?: SavedProgress | null; // dados recuperados do AsyncStorage, se existirem
+  onReiniciar: () => void; // limpa o progresso salvo e volta pra tela de seleção
 }
 
 // Intervalo (em ms) em que os atributos mudam sozinhos com o passar do tempo
 const INTERVALO_TEMPO = 4000;
 
-export default function GamePage({ starter, pokemonInicial, progressoSalvo }: GamePageProps) {
+export default function GamePage({ starter, pokemonInicial, progressoSalvo, onReiniciar }: GamePageProps) {
   // Dados atuais do Pokémon exibido (mudam quando ele evolui)
   // Se tiver progresso salvo, começa a partir dele; senão usa o inicial escolhido agora
   const [pokemon, setPokemon] = useState<PokemonInfo>(progressoSalvo?.pokemon ?? pokemonInicial);
@@ -35,8 +36,8 @@ export default function GamePage({ starter, pokemonInicial, progressoSalvo }: Ga
   const [exp, setExp] = useState(progressoSalvo?.exp ?? 0);
 
   // Atributos principais do Pokémon, todos de 0 a 100.
-  // Os 4 seguem a mesma regra: quanto maior, melhor, e todos caem
-  // sozinhos com o tempo.
+  // Os 4 seguem a mesma regra agora: quanto MAIOR, melhor, e todos caem
+  // sozinhos com o tempo. Alimentar recupera a saciedade.
   const [stats, setStats] = useState<Stats>(
     progressoSalvo?.stats ?? {
       saciedade: 80,
@@ -225,6 +226,7 @@ export default function GamePage({ starter, pokemonInicial, progressoSalvo }: Ga
         <ActionButton label="Dormir" icon="💤" color={cores.energia} onPress={dormir} />
         <ActionButton label="Limpar" icon="🧼" color={cores.higiene} onPress={limpar} />
         <ActionButton label="Treinar" icon="🏋️" color={cores.azul} onPress={treinar} />
+        <ActionButton label="Reiniciar" icon="🔄" color={cores.vermelho} onPress={onReiniciar} />
       </View>
     </ScrollView>
   );

@@ -5,7 +5,7 @@ import SelectStarterPage from './src/pages/SelectStarterPage';
 import GamePage from './src/pages/GamePage';
 import { Starter, PokemonInfo, SavedProgress } from './src/types/game';
 import { pokeTheme } from './src/theme';
-import { carregarProgresso } from './src/services/storage';
+import { carregarProgresso, limparProgresso } from './src/services/storage';
 
 export default function App() {
   const [starterEscolhido, setStarterEscolhido] = useState<Starter | null>(null);
@@ -33,6 +33,14 @@ export default function App() {
     setPokemonEscolhido(pokemon);
   }
 
+  // Limpa o progresso salvo e volta pra tela de seleção de inicial
+  function handleReiniciar() {
+    limparProgresso();
+    setStarterEscolhido(null);
+    setPokemonEscolhido(null);
+    setProgressoSalvo(null);
+  }
+
   if (carregando) {
     return (
       <PaperProvider theme={pokeTheme}>
@@ -51,6 +59,7 @@ export default function App() {
           starter={starterEscolhido}
           pokemonInicial={pokemonEscolhido}
           progressoSalvo={progressoSalvo}
+          onReiniciar={handleReiniciar}
         />
       )}
     </PaperProvider>
