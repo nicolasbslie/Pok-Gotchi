@@ -23,7 +23,7 @@ export async function carregarProgresso(): Promise<SavedProgress | null> {
   }
 }
 
-// Apaga o progresso salvo (útil pra um botão de "recomeçar", se quiser)
+// Apaga o progresso salvo (para um botão de apagar progresso ainda não adicionado)
 export async function limparProgresso(): Promise<void> {
   try {
     await AsyncStorage.removeItem(CHAVE_PROGRESSO);

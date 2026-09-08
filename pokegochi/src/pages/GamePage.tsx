@@ -35,8 +35,8 @@ export default function GamePage({ starter, pokemonInicial, progressoSalvo }: Ga
   const [exp, setExp] = useState(progressoSalvo?.exp ?? 0);
 
   // Atributos principais do Pokémon, todos de 0 a 100.
-  // Os 4 seguem a mesma regra agora: quanto MAIOR, melhor, e todos caem
-  // sozinhos com o tempo. Alimentar recupera a saciedade.
+  // Os 4 seguem a mesma regra: quanto maior, melhor, e todos caem
+  // sozinhos com o tempo.
   const [stats, setStats] = useState<Stats>(
     progressoSalvo?.stats ?? {
       saciedade: 80,

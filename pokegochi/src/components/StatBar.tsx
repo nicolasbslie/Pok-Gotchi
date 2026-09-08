@@ -4,7 +4,7 @@ import { Text, ProgressBar } from 'react-native-paper';
 
 interface StatBarProps {
   label: string;
-  icon: string; // emoji usado como ícone, sem depender de libs extras
+  icon: string; // emoji
   value: number; // 0 a 100
   color: string;
 }
